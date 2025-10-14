@@ -1,0 +1,11 @@
+# Miscellaneous Definition Example
+
+Some introductory text.
+
+:::definition[Score statistic]{label=defscoreuniv}
+
+Content of the definition block goes here.
+
+Some text after the block.
+
+:::

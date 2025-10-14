@@ -1,0 +1,5 @@
+# Video Block Examples
+
+##[video, videoid="5u1w6eROypI", duration="9m57s"] Introduction to GLMs
+
+##[video, videoid="a1b2c3D4e5", duration="15m12s"] Advanced Topics in Regression

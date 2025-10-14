@@ -1,0 +1,29 @@
+# Custom Block Examples
+
+::: {.Example}
+
+## Simple Example
+
+:::
+<!-- end of Example -->
+
+:::: {.Task}
+
+## Task Heading
+
+::::
+<!-- end of Task -->
+
+::::: {.Answer}
+
+## Answer Heading
+
+:::::
+<!-- end of Answer -->
+
+:::::: {.Definition}
+
+## Definition Heading
+
+::::::
+<!-- end of Definition -->

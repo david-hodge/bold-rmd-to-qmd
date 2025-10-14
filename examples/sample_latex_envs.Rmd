@@ -1,0 +1,13 @@
+# LaTeX Environment Examples
+
+Some inline text.
+
+\begin{align}
+a + b &= c \
+d + e &= f
+\end{align}
+
+\begin{multline*}
+g(x) = b_0 + b_1 x + b_2 x^2 \
++ b_3 x^3
+\end{multline*}

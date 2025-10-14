@@ -1,0 +1,7 @@
+# Weblink Block Examples
+
+###[weblink,target="https://goo.gl/mZHxyN", icon=book]
+
+Some text here.
+
+###[weblink,target="https://example.com/page", icon=link]

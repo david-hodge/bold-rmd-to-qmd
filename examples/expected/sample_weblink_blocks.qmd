@@ -1,0 +1,9 @@
+# Weblink Block Examples
+
+:::{.Weblink}
+<https://goo.gl/mZHxyN>
+
+Some text here.
+
+:::{.Weblink}
+<https://example.com/page>

@@ -1,0 +1,17 @@
+# Video Block Examples
+
+:::{#fig-vid5u1w6eROypI}
+
+{{< video https://youtu.be/5u1w6eROypI
+title = "Introduction to GLMs (9m57s)"
+>}}
+:::
+<!-- end fig -->
+
+:::{#fig-vida1b2c3D4e5}
+
+{{< video https://youtu.be/a1b2c3D4e5
+title = "Advanced Topics in Regression (15m12s)"
+>}}
+:::
+<!-- end fig -->

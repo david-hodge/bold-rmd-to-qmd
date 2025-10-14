@@ -1,0 +1,13 @@
+# Custom Block Examples
+
+### [example] Simple Example
+Some example content here.
+
+#### [task] Task Heading
+Task content here.
+
+##### [answer] Answer Heading
+Answer content here.
+
+###### [definition] Definition Heading
+Definition content here.

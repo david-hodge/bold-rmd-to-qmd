@@ -1,0 +1,13 @@
+# Miscellaneous Definition Example
+
+Some introductory text.
+
+:::{.Definition #rdefscoreuniv}
+## Score statistic
+
+Content of the definition block goes here.
+
+Some text after the block.
+
+:::
+<!-- end definition -->

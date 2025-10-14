@@ -1,0 +1,12 @@
+# Mixed Block Examples
+
+Text before blocks.
+
+::: {.Example}
+
+## Mixed Example
+
+:::
+<!-- end of Example -->
+
+Some text after.

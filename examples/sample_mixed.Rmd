@@ -1,0 +1,8 @@
+# Mixed Block Examples
+
+Text before blocks.
+
+### [example] Mixed Example
+Example content here.
+
+Some text after.
