@@ -14,7 +14,7 @@ def convert_video_blocks(text: str) -> str:
             title = title.strip()
             if duration:
                 title = f"{title} ({duration})"
-            converted_lines.append(f":::{{#fig-vid{videoid}}}")
+            converted_lines.append(f":::{{#vid-vid{videoid}}}")
             converted_lines.append("")
             converted_lines.append(f"{{{{< video https://youtu.be/{videoid}")
             converted_lines.append(f'title = "{title}"')
@@ -23,7 +23,7 @@ def convert_video_blocks(text: str) -> str:
             converted_lines.append(title)           # title on its own line
             converted_lines.append("")              # blank line before closing
             converted_lines.append(":::")
-            converted_lines.append("<!-- end fig -->")
+            converted_lines.append("<!-- end of vid -->")
             continue
         converted_lines.append(line)
 
