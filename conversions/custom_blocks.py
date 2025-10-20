@@ -6,6 +6,7 @@ BLOCK_TYPES = {
     "answer": "Answer",
     "definition": "Definition",
     "theorem": "Theorem",
+    "supplement": "Supplement",
 }
 
 
