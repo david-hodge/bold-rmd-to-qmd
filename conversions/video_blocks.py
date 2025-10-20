@@ -5,7 +5,7 @@ def convert_video_blocks(text: str) -> str:
     lines = text.splitlines()
     converted_lines = []
     open_pattern = re.compile(
-        r'^#{2,}\[video,\s*videoid=\"([^"]+)\",\s*duration=\"([^"]+)\"\]\s*(.*)$')
+        r'^#{2,}s*\[video,\s*videoid=\"([^"]+)\",\s*duration=\"([^"]+)\"\]\s*(.*)$')
 
     for line in lines:
         open_match = open_pattern.match(line)
