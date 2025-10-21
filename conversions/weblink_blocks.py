@@ -1,10 +1,11 @@
 import re
 
+
 def convert_weblink_blocks(text: str) -> str:
     lines = text.splitlines()
     converted_lines = []
-    open_pattern = re.compile(r'^##+\[weblink,\s*target=\"([^"]+)\",\s*icon=[^\]]*\]$')
-    close_pattern = re.compile(r'^##+\[/weblink\]$')
+    open_pattern = re.compile(r'^##+\s*\[weblink,\s*target=\"([^"]+)\",\s*icon=[^\]]*\]$')
+    close_pattern = re.compile(r'^##+\s*\[/weblink\]$')
 
     for line in lines:
         open_match = open_pattern.match(line)
