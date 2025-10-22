@@ -14,14 +14,14 @@ def convert_custom_blocks(text: str) -> str:
     lines = text.splitlines()
     converted_lines = []
 
-    # Match 3–6 #, optional spaces, then [blocktype], optional heading text
+    # Match 2–6 #, optional spaces, then [blocktype], optional heading text
     opening_pattern = re.compile(
         r'^(#{2,6})\s*\[\s*(' +
         '|'.join(BLOCK_TYPES.keys()) +
         r')\s*\]\s*(.*)?\s*$'
     )
 
-    # Closing: same number of #, [/blocktype]
+    # Closing: again 2-6 #, optional spaces then [/blocktype]
     closing_pattern = re.compile(
         r'^(#{2,6})\s*\[\s*/(' + '|'.join(BLOCK_TYPES.keys()) + r')\s*\]\s*$'
     )

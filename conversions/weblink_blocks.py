@@ -4,6 +4,8 @@ import re
 def convert_weblink_blocks(text: str) -> str:
     lines = text.splitlines()
     converted_lines = []
+    # Two or more hashes, optional space, then [weblink, target=..., icon=...]
+    # Saving the target only
     open_pattern = re.compile(r'^##+\s*\[weblink,\s*target=\"([^"]+)\",\s*icon=[^\]]*\]$')
     close_pattern = re.compile(r'^##+\s*\[/weblink\]$')
 

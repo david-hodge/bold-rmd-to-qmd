@@ -1,5 +1,10 @@
 import re
 
+# Quarto is a bit weird, requires $$ for display math but then...
+# the PDF will be upset by $$\begin{align} as align starts a mathmode
+# So we replace \begin{align} with $$\begin{aligned}
+# Similarly multline has a non-math-mode invoking version called multlined
+
 # Mapping of LaTeX environments to new names
 LATEX_ENV_MAP = {
     "align": "aligned",
@@ -42,10 +47,10 @@ def convert_latex_envs(text: str) -> str:
 
 def convert_bracket_math(text: str) -> str:
     """
-    Convert LaTeX-style [ ... ] math to block $$ ... $$, 
+    Convert LaTeX-style \[ ... \] math to block $$ ... $$, 
     putting $$ on separate lines for readability.
     """
-    # Replace [ ... ] spans with $$ ... $$, only for entire-line matches
+    # Replace \[ ... \] spans with $$ ... $$, only for entire-line matches
     def replacer(match):
         content = match.group(1).strip()
         return f"$$\n{content}\n$$"

@@ -45,11 +45,15 @@ def convert_labels_and_refs(text: str) -> str:
     Replace LaTeX \label{...} with right-aligned \text{[label: ...]} and
     \ref{...} with \emph{ref{...}} for safe LaTeX display inside aligned.
     """
-    # Replace \label{CONTENT} → right-aligned text
+    # Currently Quarto/Mathjax doesn't support numbering and reffig inside
+    # a multiline equation. So this will need to be manually fixed later.
+    
+    # Replace \label{CONTENT} → right-aligned text version to easily spot
     # Using a unique marker [label: CONTENT] so it's easy to find later
     text = re.sub(r'\\label\{([^\}]+)\}', r'\\hfill \\text{[label: \1]}', text)
 
     # Replace \ref{CONTENT} → \emph{ref{CONTENT}}
+    # References turned into italic to be fixed later too.
     text = re.sub(r'\\ref\{([^\}]+)\}', r'*{ref{\1}*', text)
 
     return text

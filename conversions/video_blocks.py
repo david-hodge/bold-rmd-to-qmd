@@ -4,8 +4,9 @@ import re
 def convert_video_blocks(text: str) -> str:
     lines = text.splitlines()
     converted_lines = []
+    # Match at least two hashes, optional spaces, [video, videoid=... duration=..], spaces then title 
     open_pattern = re.compile(
-        r'^#{2,}s*\[video,\s*videoid=\"([^"]+)\",\s*duration=\"([^"]+)\"\]\s*(.*)$')
+        r'^#{2,}\s*\[video,\s*videoid=\"([^"]+)\",\s*duration=\"([^"]+)\"\]\s*(.*)$')
 
     for line in lines:
         open_match = open_pattern.match(line)
