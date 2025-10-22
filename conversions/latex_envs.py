@@ -47,14 +47,14 @@ def convert_latex_envs(text: str) -> str:
 
 def convert_bracket_math(text: str) -> str:
     """
-    Convert LaTeX-style \[ ... \] math to block $$ ... $$, 
+    Convert LaTeX-style \\[ ... \\] math to block $$ ... $$, 
     putting $$ on separate lines for readability.
     """
-    # Replace \[ ... \] spans with $$ ... $$, only for entire-line matches
+    # Replace \\[ ... \\] spans with $$ ... $$, only for entire-line matches
     def replacer(match):
         content = match.group(1).strip()
         return f"$$\n{content}\n$$"
 
-    # Use non-greedy match between \[ and \]
+    # Use non-greedy match between \\[ and \\]
     pattern = re.compile(r'\\\[(.*?)\\\]', re.DOTALL)
     return pattern.sub(replacer, text)
