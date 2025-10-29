@@ -42,17 +42,17 @@ def convert_definition_misc(text: str) -> str:
 
 def convert_labels_and_refs(text: str) -> str:
     """
-    Replace LaTeX \label{...} with right-aligned \text{[label: ...]} and
-    \ref{...} with \emph{ref{...}} for safe LaTeX display inside aligned.
+    Replace LaTeX \\label{...} with right-aligned \\text{[label: ...]} and
+    \\ref{...} with \\emph{ref{...}} for safe LaTeX display inside aligned.
     """
     # Currently Quarto/Mathjax doesn't support numbering and reffig inside
     # a multiline equation. So this will need to be manually fixed later.
     
-    # Replace \label{CONTENT} → right-aligned text version to easily spot
+    # Replace \\label{CONTENT} → right-aligned text version to easily spot
     # Using a unique marker [label: CONTENT] so it's easy to find later
     text = re.sub(r'\\label\{([^\}]+)\}', r'\\hfill \\text{[label: \1]}', text)
 
-    # Replace \ref{CONTENT} → \emph{ref{CONTENT}}
+    # Replace \\ref{CONTENT} → \emph{ref{CONTENT}}
     # References turned into italic to be fixed later too.
     text = re.sub(r'\\ref\{([^\}]+)\}', r'*{ref{\1}*', text)
 
@@ -62,7 +62,7 @@ import re
 
 def split_labelled_equations(text: str) -> str:
     """
-    Split lines containing \label{...} inside math environments into
+    Split lines containing \\label{...} inside math environments into
     standalone Quarto-style equation blocks:
 
         $$ 
@@ -93,10 +93,15 @@ def split_labelled_equations(text: str) -> str:
         # Handle line with a label
         if in_env and label_match:
             label_name = label_match.group(1)
-            # Change eqn:cat into eq-cat, colons not allowed
             label_name = re.sub(r'^eqn:', 'eq-', label_name)
+
             # Remove the label markup
-            clean_line = label_pattern.sub('', line).rstrip()
+            clean_line = label_pattern.sub('', line).strip()
+
+            # Remove leading/trailing alignment characters and trailing \\\\ 
+            clean_line = re.sub(r'^[&\s]+', '', clean_line)   # leading &
+            clean_line = re.sub(r'[&\s]+$', '', clean_line)   # trailing & and spaces
+            clean_line = re.sub(r'\\\\$', '', clean_line)     # trailing \\
 
             # Close current environment and $$ block
             output.append(f"\\end{{{in_env}}}")
@@ -127,8 +132,8 @@ def tidy_equations(text: str) -> str:
     Remove empty math environments of the form:
     
         $$
-        \begin{env}
-        \end{env}
+        \\begin{env}
+        \\end{env}
         $$
     
     where 'env' can be any LaTeX math environment name.
@@ -145,7 +150,7 @@ def tidy_equations(text: str) -> str:
 
 def update_refs(text: str) -> str:
     """
-    Replace LaTeX \ref{prefix:name} with Quarto-style references:
+    Replace LaTeX \\ref{prefix:name} with Quarto-style references:
       - eqn:cat → @eq-cat
       - other three-letter prefixes → @prefix-...
       - like fig:car --> fig-car
@@ -165,6 +170,6 @@ def update_refs(text: str) -> str:
 
 def convert_textbf_to_term_md(text: str) -> str:
     """
-    Replace all \textbf{...} with [...]{.term}.
+    Replace all \\textbf{...} with [...]{.term}.
     """
     return re.sub(r'\\textbf\{([^\}]+)\}', r'[\1]{.term}', text)
