@@ -147,8 +147,9 @@ def update_refs(text: str) -> str:
     """
     return re.sub(r'\\ref\{(eqn:[^\}]+)\}', r'@\1', text)
 
-def convert_textbf_to_term(text: str) -> str:
+
+def convert_textbf_to_term_md(text: str) -> str:
     """
-    Replace all instances of \textbf{...} with \term{...}.
+    Replace all \textbf{...} with [...]{.term}.
     """
-    return re.sub(r'\\textbf\{([^\}]+)\}', r'\\term{\1}', text)
+    return re.sub(r'\\textbf\{([^\}]+)\}', r'[\1]{.term}', text)
