@@ -103,7 +103,7 @@ def split_labelled_equations(text: str) -> str:
             output.append("$$")
 
             # Emit labeled line as its own standalone block
-           output.append(f"$$\n{clean_line}\n$$ {{#{label_name}}}")
+            output.append(f"$$\n{clean_line}\n$$ {{#{label_name}}}")
 
             # Reopen environment for remaining lines
             output.append("$$")
@@ -142,9 +142,6 @@ def tidy_equations(text: str) -> str:
 
     cleaned = re.sub(empty_env_pattern, '', text)
     return cleaned.strip()
-
-def update_refs(text: str) -> str:
-    import re
 
 def update_refs(text: str) -> str:
     """

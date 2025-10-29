@@ -6,7 +6,7 @@ from conversions.weblink_blocks import convert_weblink_blocks
 from conversions.miscellaneous import (
     convert_definition_misc,
     convert_labels_and_refs,
-    convert_textbf_to_term,
+    convert_textbf_to_term_md,
     split_labelled_equations,
     tidy_equations,
     update_refs,
@@ -20,7 +20,7 @@ CONVERSION_FUNCTIONS = [
     convert_weblink_blocks,
     convert_definition_misc,
     convert_bracket_math,
-    convert_textbf_to_term,
+    convert_textbf_to_term_md,
     split_labelled_equations,
     tidy_equations,
     update_refs,
