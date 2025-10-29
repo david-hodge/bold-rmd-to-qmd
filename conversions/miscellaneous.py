@@ -58,6 +58,90 @@ def convert_labels_and_refs(text: str) -> str:
 
     return text
 
+import re
+
+def split_labelled_equations(text: str) -> str:
+    """
+    Split lines containing \label{...} inside math environments into
+    standalone Quarto-style equation blocks:
+
+        $$ 
+        equation
+        $$ {#eq-LABEL}
+
+    while preserving the rest of the environment structure.
+    """
+    label_pattern = re.compile(r'\\label\{([^\}]+)\}')
+    begin_pattern = re.compile(r'\\begin\{([a-zA-Z*]+)\}')
+    end_pattern = re.compile(r'\\end\{([a-zA-Z*]+)\}')
+
+    lines = text.splitlines()
+    output = []
+    in_env = None
+
+    for line in lines:
+        begin_match = begin_pattern.search(line)
+        end_match = end_pattern.search(line)
+        label_match = label_pattern.search(line)
+
+        # Detect entering an environment
+        if begin_match:
+            in_env = begin_match.group(1)
+            output.append(line)
+            continue
+
+        # Handle line with a label
+        if in_env and label_match:
+            label_name = label_match.group(1)
+            # Remove the label markup
+            clean_line = label_pattern.sub('', line).rstrip()
+
+            # Close current environment and $$ block
+            output.append(f"\\end{{{in_env}}}")
+            output.append("$$")
+
+            # Emit labeled line as its own standalone block
+            output.append(f"$$\n{clean_line}\n$$ {{#eq-{label_name}}}")
+
+            # Reopen environment for remaining lines
+            output.append("$$")
+            output.append(f"\\begin{{{in_env}}}")
+            continue
+
+        # Detect leaving an environment
+        if end_match:
+            in_env = None
+            output.append(line)
+            continue
+
+        # Default: copy the line as-is
+        output.append(line)
+
+    return "\n".join(output)
+
+
+def tidy_equations(text: str) -> str:
+    """
+    Remove empty math environments of the form:
+    
+        $$
+        \begin{env}
+        \end{env}
+        $$
+    
+    where 'env' can be any LaTeX math environment name.
+    """
+    # Regex matches:
+    # $$, optional whitespace/newlines, \begin{env}, optional whitespace/newlines, \end{env}, optional whitespace/newlines, $$
+    empty_env_pattern = re.compile(
+        r'\$\$\s*\\begin\{([a-zA-Z*]+)\}\s*\\end\{\1\}\s*\$\$',
+        flags=re.DOTALL,
+    )
+
+    cleaned = re.sub(empty_env_pattern, '', text)
+    return cleaned.strip()
+
+
 
 def convert_textbf_to_term(text: str) -> str:
     """
