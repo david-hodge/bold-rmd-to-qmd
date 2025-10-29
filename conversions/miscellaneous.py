@@ -141,7 +141,11 @@ def tidy_equations(text: str) -> str:
     cleaned = re.sub(empty_env_pattern, '', text)
     return cleaned.strip()
 
-
+def update_refs(text: str) -> str:
+    """
+    Replace LaTeX \ref{eqn:...} with Quarto-style @eqn:...
+    """
+    return re.sub(r'\\ref\{(eqn:[^\}]+)\}', r'@\1', text)
 
 def convert_textbf_to_term(text: str) -> str:
     """
