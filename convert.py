@@ -1,4 +1,4 @@
-import argparse
+import argparse, re
 from conversions.custom_blocks import convert_custom_blocks
 from conversions.latex_envs import convert_latex_envs, convert_bracket_math
 from conversions.video_blocks import convert_video_blocks
@@ -36,6 +36,10 @@ def main():
 
     with open(args.input_file, "r", encoding="utf-8") as f:
         text = f.read()
+
+    # OPTIONAL - COULD REMOVE THIS IF YOU WANT TO PRESERVE OLD COMMENTS
+    # Remove all HTML comments including surrounding blank lines
+    text = re.sub(r'<!--.*?-->', '<!-- old redacted content removed -->', text, flags=re.DOTALL)
 
     for func in CONVERSION_FUNCTIONS:
         text = func(text)
