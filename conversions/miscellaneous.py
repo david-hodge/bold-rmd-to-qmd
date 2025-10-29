@@ -93,6 +93,8 @@ def split_labelled_equations(text: str) -> str:
         # Handle line with a label
         if in_env and label_match:
             label_name = label_match.group(1)
+            # Change eqn:cat into eq-cat, colons not allowed
+            label_name = re.sub(r'^eqn:', 'eq-', label_name)
             # Remove the label markup
             clean_line = label_pattern.sub('', line).rstrip()
 
@@ -101,7 +103,7 @@ def split_labelled_equations(text: str) -> str:
             output.append("$$")
 
             # Emit labeled line as its own standalone block
-            output.append(f"$$\n{clean_line}\n$$ {{#eq-{label_name}}}")
+           output.append(f"$$\n{clean_line}\n$$ {{#{label_name}}}")
 
             # Reopen environment for remaining lines
             output.append("$$")
@@ -142,10 +144,26 @@ def tidy_equations(text: str) -> str:
     return cleaned.strip()
 
 def update_refs(text: str) -> str:
+    import re
+
+def update_refs(text: str) -> str:
     """
-    Replace LaTeX \ref{eqn:...} with Quarto-style @eqn:...
+    Replace LaTeX \ref{prefix:name} with Quarto-style references:
+      - eqn:cat → @eq-cat
+      - other three-letter prefixes → @prefix-...
+      - like fig:car --> fig-car
     """
-    return re.sub(r'\\ref\{(eqn:[^\}]+)\}', r'@\1', text)
+    def repl(match):
+        prefix = match.group(1)
+        name = match.group(2)
+        if prefix == 'eqn':
+            new_prefix = 'eq'
+        else:
+            new_prefix = prefix[:3]  # keep first 3 letters
+        return f"@{new_prefix}-{name}"
+
+    return re.sub(r'\\ref\{([a-zA-Z]+):([^\}]+)\}', repl, text)
+
 
 
 def convert_textbf_to_term_md(text: str) -> str:
