@@ -15,103 +15,37 @@ LATEX_ENV_MAP = {
 
 LATEX_ENVS = list(LATEX_ENV_MAP.keys())
 
-
-import re
-
-LATEX_ENV_MAP = {
-    "align": "aligned",
-    "align*": "aligned",
-    "multline": "multlined",
-    "multline*": "multlined",
-}
-
-LATEX_ENVS = list(LATEX_ENV_MAP.keys())
-
-
-import re
-
-LATEX_ENV_MAP = {
-    "align": "aligned",
-    "align*": "aligned",
-    "multline": "multlined",
-    "multline*": "multlined",
-}
-
-LATEX_ENVS = list(LATEX_ENV_MAP.keys())
-
-
 def convert_latex_envs(text: str) -> str:
     """
     Convert LaTeX math environments into MathJax-friendly display math blocks.
 
-    This function:
-      • Finds LaTeX environments such as `align`, `align*`, `multline`, and `multline*`.
-      • Converts them into their inline equivalents (`aligned`, `multlined`) wrapped in
-        display math delimiters (`$$ ... $$`).
-      • Ensures `$$` delimiters appear on their own lines, even if the environment
-        begins or ends mid-line (with text before or after).
-      • Adds newlines after LaTeX line breaks (`\\`) **only inside** math environments,
-        to make each equation line easier to read.
-      • Preserves surrounding text and layout for Markdown / MathJax rendering.
-
-    Args:
-        text (str): A string containing LaTeX code.
-
-    Returns:
-        str: The modified LaTeX text with properly formatted math environments.
-
-    Example:
-        Input:
-            "Before \\begin{align} a &= b + c \\\\ d &= e + f \\end{align} after"
-
-        Output:
-            "Before\n$$\n\\begin{aligned} a &= b + c \\\\\n d &= e + f \\end{aligned}\n$$\nafter"
+    - Converts environments like `align`, `align*`, `multline`, `multline*` into
+      inline equivalents wrapped in $$.
+    - Ensures $$ delimiters are on their own lines.
+    - Adds a newline after each \\ inside math environments only if not already there.
+    - Handles multi-line environments (begin/end can be on different lines).
     """
     env_pattern = '|'.join(re.escape(env) for env in LATEX_ENVS)
-    begin_pattern = re.compile(rf'(.*?)\\begin\{{({env_pattern})\}}')
-    end_pattern = re.compile(rf'\\end\{{({env_pattern})\}}(.*)')
+    # Matches \begin{env} ... \end{env}, including multi-line content
+    pattern = re.compile(rf'(\\begin\{{({env_pattern})\}})(.*?)(\\end\{{({env_pattern})\}})', re.DOTALL)
 
-    lines = text.splitlines()
-    converted_lines = []
-    in_env = False  # Track whether we’re inside an environment
+    def replacer(match):
+        begin = match.group(1)
+        env = match.group(2)
+        content = match.group(3)
+        end = match.group(4)
 
-    for line in lines:
-        # Check for environment starts
-        if begin_pattern.search(line):
-            in_env = True
+        new_env = LATEX_ENV_MAP.get(env, env)
 
-        # Apply \\ → \\\n only if inside an environment
-        if in_env:
-            line = re.sub(r'\\\\(?!\s*\n)', r'\\\\\n', line)
+        # Strip blank line (will add back later)
+        content = content.strip()
+        # Normalize \\ to add newline only if not already there
+        content = re.sub(r'\\\\(?![ \t]*\n)', r'\\\\\n', content)
 
-        # Handle \begin{...}
-        def replace_begin(match):
-            before = match.group(1)
-            env = match.group(2)
-            new_env = LATEX_ENV_MAP.get(env, env)
-            if before.strip():
-                return f"{before.rstrip()}\n$$\n\\begin{{{new_env}}}"
-            else:
-                return f"$$\n\\begin{{{new_env}}}"
+        return f"\n$$\n\\begin{{{new_env}}}\n{content}\n\\end{{{new_env}}}\n$$\n"
 
-        line = begin_pattern.sub(replace_begin, line)
-
-        # Handle \end{...}
-        def replace_end(match):
-            nonlocal in_env
-            env = match.group(1)
-            after = match.group(2)
-            new_env = LATEX_ENV_MAP.get(env, env)
-            in_env = False  # We're leaving the environment now
-            if after.strip():
-                return f"\\end{{{new_env}}}\n$$\n{after.lstrip()}"
-            else:
-                return f"\\end{{{new_env}}}\n$$"
-
-        line = end_pattern.sub(replace_end, line)
-        converted_lines.append(line)
-
-    return "\n".join(converted_lines)
+    # Replace all matched environments
+    return pattern.sub(replacer, text)
 
 
 
