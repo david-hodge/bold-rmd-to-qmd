@@ -9,6 +9,7 @@ from conversions.miscellaneous import (
     convert_textbf_to_term,
     split_labelled_equations,
     tidy_equations,
+    update_refs,
 )
 
 
@@ -22,6 +23,7 @@ CONVERSION_FUNCTIONS = [
     convert_textbf_to_term,
     split_labelled_equations,
     tidy_equations,
+    update_refs,
 ]
 
 
