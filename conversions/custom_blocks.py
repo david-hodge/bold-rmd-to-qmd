@@ -12,7 +12,7 @@ BLOCK_TYPES = {
 
 # Toggle: if True, keep Answer nested inside Task.
 # If False, close Task before opening Answer.
-NEST_TASK_ANSWERS = True
+NEST_TASK_ANSWERS = False
 
 
 def convert_custom_blocks(text: str) -> str:
