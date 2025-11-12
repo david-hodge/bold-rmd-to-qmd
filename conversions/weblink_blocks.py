@@ -6,7 +6,7 @@ def convert_weblink_blocks(text: str) -> str:
     converted_lines = []
     # Two or more hashes, optional space, then [weblink, target=..., icon=...]
     # Saving the target only
-    open_pattern = re.compile(r'^##+\s*\[weblink,\s*target=\"([^"]+)\",\s*icon=[^\]]*\]$')
+    open_pattern = re.compile(r'^##+\s*\[weblink,\s*target\s*=\s*"([^"]*)"(?:,\s*icon\s*=[^\]]*)?\]\s*$')
     close_pattern = re.compile(r'^##+\s*\[/weblink\]$')
 
     for line in lines:
@@ -14,7 +14,8 @@ def convert_weblink_blocks(text: str) -> str:
         if open_match:
             target = open_match.group(1).strip()
             converted_lines.append(":::{.Weblink}")
-            converted_lines.append(f"<{target}>")
+            if target:
+                converted_lines.append(f"<{target}>")
             converted_lines.append("")
             continue
 
