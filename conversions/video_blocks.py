@@ -1,7 +1,7 @@
 import re
 
 
-def convert_video_blocks(text: str) -> str:
+def convert_video_blocks_old(text: str) -> str:
     lines = text.splitlines()
     converted_lines = []
     # Match at least two hashes, optional spaces, [video, videoid=... duration=..], spaces then title 
@@ -23,6 +23,32 @@ def convert_video_blocks(text: str) -> str:
             converted_lines.append("")              # blank line
             converted_lines.append(title)           # title on its own line
             converted_lines.append("")              # blank line before closing
+            converted_lines.append(":::")
+            converted_lines.append("<!-- end of vid -->")
+            continue
+        converted_lines.append(line)
+
+    return "\n".join(converted_lines)
+
+
+def convert_video_blocks(text: str) -> str:
+    lines = text.splitlines()
+    converted_lines = []
+    # Match at least two hashes, optional spaces, [video, videoid=... duration=..], spaces then title 
+    open_pattern = re.compile(
+        r'^#{2,}\s*\[video,\s*videoid=\"([^"]+)\",\s*duration=\"([^"]+)\"\]\s*(.*)$')
+
+    for line in lines:
+        open_match = open_pattern.match(line)
+        if open_match:
+            videoid, duration, title = open_match.groups()
+            title = title.strip()
+            converted_lines.append(f":::{{.Video #rvid-{videoid}}}")
+            converted_lines.append("")
+            converted_lines.append(f"## {title} ({duration})")
+            converted_lines.append("")
+            converted_lines.append(f"{{{{< iframe youtube-light=\"{videoid}\" >}}}}")
+            converted_lines.append("")
             converted_lines.append(":::")
             converted_lines.append("<!-- end of vid -->")
             continue
